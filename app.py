@@ -1,39 +1,30 @@
 from flask import Flask
+from utils import load_candidates, get_all, get_by_pk, get_by_skill
+from constants import FILENAME
 
 app = Flask(__name__)
 
+dict = load_candidates(FILENAME)
 
+# главная страница - показывает всех кандидатов
 @app.route("/",)
-def page_test():
-    return 'Главная страничка'
+def main():
+    return f'<pre>Наши кандидаты:\n<pre>' \
+           f'<pre>{get_all(dict)}\n<pre>'
+
+# выводит кандидатов по pk(int)
+@app.route('/candidates/<int:x>',)
+def candidates(x):
+    return f"<pre>{get_by_pk(x, dict)}<pre>"
+
+# выводит кандидатов по навыку skills
+@app.route('/skills/<x>',)
+def skills(x):
+    return f"<pre>{get_by_skill(x, dict)}<pre>"
 
 
-# @app.route('/profile/')
-# def page_profile():
-#     return 'Профиль пользователя'
-
-# @app.route('/users/<uid>')
-# def profile(uid):
-#     return f'<h1>Профиль {uid}</h1>'
-
-@app.route('/catalog/')
-def page_catalog():
-    return 'каталог'
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=5000)
 
 
-@app.route('/catalog/items/<itemid>')
-def profile(itemid):
-    return f'<h1>Страничка товара {itemid}</h1>'
 
-
-@app.route("/feed/",)
-def page_feed():
-    return 'Лента пользователя'
-
-
-@app.route("/messages/",)
-def page_messages():
-    return 'Сообщения пользователя'
-
-
-app.run(host='127.0.0.1', port=5000)
